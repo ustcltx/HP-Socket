@@ -11,3 +11,19 @@
 *.lai
 *.la
 *.a
+
+*.suo
+*.user
+*.sln.docstates
+
+# Build results
+
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Bb]in/
+[Oo]bj/
+*.sdf
+*.aps
+.vs

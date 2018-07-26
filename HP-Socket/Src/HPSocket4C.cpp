@@ -438,6 +438,25 @@
 	#pragma comment(linker, "/EXPORT:HP_TcpServer_SetKeepAliveTime=_HP_TcpServer_SetKeepAliveTime@8")
 	#pragma comment(linker, "/EXPORT:HP_TcpServer_SetSocketBufferSize=_HP_TcpServer_SetSocketBufferSize@8")
 	#pragma comment(linker, "/EXPORT:HP_TcpServer_SetSocketListenQueue=_HP_TcpServer_SetSocketListenQueue@8")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetConnectionID=_HP_UdpCast_GetConnectionID@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetExtra=_HP_UdpCast_GetExtra@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetFreeBufferPoolHold=_HP_UdpCast_GetFreeBufferPoolHold@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetFreeBufferPoolSize=_HP_UdpCast_GetFreeBufferPoolSize@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetLastError=_HP_UdpCast_GetLastError@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetLastErrorDesc=_HP_UdpCast_GetLastErrorDesc@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetLocalAddress=_HP_UdpCast_GetLocalAddress@16")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetPendingDataLength=_HP_UdpCast_GetPendingDataLength@8")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetRemoteHost=_HP_UdpCast_GetRemoteHost@16")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetState=_HP_UdpCast_GetState@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_HasStarted=_HP_UdpCast_HasStarted@4")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_Send=_HP_UdpCast_Send@12")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_SendPackets=_HP_UdpCast_SendPackets@12")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_SendPart=_HP_UdpCast_SendPart@16")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_SetExtra=_HP_UdpCast_SetExtra@8")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_SetFreeBufferPoolHold=_HP_UdpCast_SetFreeBufferPoolHold@8")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_SetFreeBufferPoolSize=_HP_UdpCast_SetFreeBufferPoolSize@8")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_Start=_HP_UdpCast_Start@20")
+	#pragma comment(linker, "/EXPORT:HP_UdpCast_Stop=_HP_UdpCast_Stop@4")
 	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetCastMode=_HP_UdpCast_GetCastMode@4")
 	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetMaxDatagramSize=_HP_UdpCast_GetMaxDatagramSize@4")
 	#pragma comment(linker, "/EXPORT:HP_UdpCast_GetMultiCastTtl=_HP_UdpCast_GetMultiCastTtl@4")
@@ -1649,8 +1668,106 @@ HPSOCKET_API DWORD __stdcall HP_UdpClient_GetDetectInterval(HP_UdpClient pClient
 	return C_HP_Object::ToSecond<IUdpClient>(pClient)->GetDetectInterval();
 }
 
+/******************************************************************************/
+/***************************** UDP Cast 组件操作方法 *****************************/
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_Start(HP_UdpCast pCast, LPCTSTR lpszRemoteAddress, USHORT usPort, BOOL bAsyncConnect, LPCTSTR lpszBindAddress)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->Start(lpszRemoteAddress, usPort, bAsyncConnect, lpszBindAddress);
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_Stop(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->Stop();
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_Send(HP_UdpCast pCast, const BYTE* pBuffer, int iLength)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->Send(pBuffer, iLength);
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_SendPart(HP_UdpCast pCast, const BYTE* pBuffer, int iLength, int iOffset)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->Send(pBuffer, iLength, iOffset);
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_SendPackets(HP_UdpCast pCast, const WSABUF pBuffers[], int iCount)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->SendPackets(pBuffers, iCount);
+}
+
 /**********************************************************************************/
 /****************************** UDP Cast 属性访问方法 ******************************/
+
+HPSOCKET_API void __stdcall HP_UdpCast_SetExtra(HP_UdpCast pCast, PVOID pExtra)
+{
+	C_HP_Object::ToSecond<IClient>(pCast)->SetExtra(pExtra);
+}
+
+HPSOCKET_API PVOID __stdcall HP_UdpCast_GetExtra(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetExtra();
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_HasStarted(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->HasStarted();
+}
+
+HPSOCKET_API En_HP_ServiceState	__stdcall HP_UdpCast_GetState(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetState();
+}
+
+HPSOCKET_API En_HP_SocketError	__stdcall HP_UdpCast_GetLastError(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetLastError();
+}
+
+HPSOCKET_API LPCTSTR __stdcall HP_UdpCast_GetLastErrorDesc(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetLastErrorDesc();
+}
+
+HPSOCKET_API HP_CONNID __stdcall HP_UdpCast_GetConnectionID(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetConnectionID();
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_GetLocalAddress(HP_UdpCast pCast, TCHAR lpszAddress[], int* piAddressLen, USHORT* pusPort)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetLocalAddress(lpszAddress, *piAddressLen, *pusPort);
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_GetRemoteHost(HP_UdpCast pCast, TCHAR lpszHost[], int* piHostLen, USHORT* pusPort)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetRemoteHost(lpszHost, *piHostLen, *pusPort);
+}
+
+HPSOCKET_API BOOL __stdcall HP_UdpCast_GetPendingDataLength(HP_UdpCast pCast, int* piPending)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetPendingDataLength(*piPending);
+}
+
+HPSOCKET_API void __stdcall HP_UdpCast_SetFreeBufferPoolSize(HP_UdpCast pCast, DWORD dwFreeBufferPoolSize)
+{
+	C_HP_Object::ToSecond<IClient>(pCast)->SetFreeBufferPoolSize(dwFreeBufferPoolSize);
+}
+
+HPSOCKET_API void __stdcall HP_UdpCast_SetFreeBufferPoolHold(HP_UdpCast pCast, DWORD dwFreeBufferPoolHold)
+{
+	C_HP_Object::ToSecond<IClient>(pCast)->SetFreeBufferPoolHold(dwFreeBufferPoolHold);
+}
+
+HPSOCKET_API DWORD __stdcall HP_UdpCast_GetFreeBufferPoolSize(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetFreeBufferPoolSize();
+}
+
+HPSOCKET_API DWORD __stdcall HP_UdpCast_GetFreeBufferPoolHold(HP_UdpCast pCast)
+{
+	return C_HP_Object::ToSecond<IClient>(pCast)->GetFreeBufferPoolHold();
+}
 
 HPSOCKET_API void __stdcall HP_UdpCast_SetMaxDatagramSize(HP_UdpCast pCast, DWORD dwMaxDatagramSize)
 {

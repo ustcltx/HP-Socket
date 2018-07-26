@@ -958,6 +958,69 @@ HPSOCKET_API DWORD __stdcall HP_UdpClient_GetDetectAttempts(HP_UdpClient pClient
 HPSOCKET_API DWORD __stdcall HP_UdpClient_GetDetectInterval(HP_UdpClient pClient);
 
 /**********************************************************************************/
+/******************************* UDP Cast 操作方法 *******************************/
+
+/*
+* 名称：启动通信组件
+* 描述：启动客户端通信组件并连接服务端，启动完成后可开始收发数据
+*		
+* 参数：		lpszRemoteAddress	-- 服务端地址
+*			usPort				-- 服务端端口
+*			bAsyncConnect		-- 是否采用异步 Connect
+*			lpszBindAddress		-- 绑定地址（默认：nullptr，TcpClient/UdpClient -> 不执行绑定操作，UdpCast 绑定 -> 0.0.0.0）
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 HP_Cast_GetLastError() 获取错误代码
+*/
+HPSOCKET_API BOOL __stdcall HP_Cast_Start(HP_UdpCast pCast, LPCTSTR lpszRemoteAddress, USHORT usPort, BOOL bAsyncConnect, LPCTSTR lpszBindAddress);
+
+/*
+* 名称：关闭通信组件
+* 描述：关闭客户端通信组件，关闭完成后断开与服务端的连接并释放所有资源
+*		
+* 参数：	
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 HP_Cast_GetLastError() 获取错误代码
+*/
+HPSOCKET_API BOOL __stdcall HP_Cast_Stop(HP_UdpCast pCast);
+
+/*
+* 名称：发送数据
+* 描述：向服务端发送数据
+*		
+* 参数：		pBuffer		-- 发送缓冲区
+*			iLength		-- 发送缓冲区长度
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*/
+HPSOCKET_API BOOL __stdcall HP_Cast_Send(HP_UdpCast pCast, const BYTE* pBuffer, int iLength);
+
+/*
+* 名称：发送数据
+* 描述：向服务端发送数据
+*		
+* 参数：		pBuffer		-- 发送缓冲区
+*			iLength		-- 发送缓冲区长度
+*			iOffset		-- 发送缓冲区指针偏移量
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*/
+HPSOCKET_API BOOL __stdcall HP_Cast_SendPart(HP_UdpCast pCast, const BYTE* pBuffer, int iLength, int iOffset);
+
+/*
+* 名称：发送多组数据
+* 描述：向服务端发送多组数据
+*		TCP - 顺序发送所有数据包 
+*		UDP - 把所有数据包组合成一个数据包发送（数据包的总长度不能大于设置的 UDP 包最大长度） 
+*		
+* 参数：		pBuffers	-- 发送缓冲区数组
+*			iCount		-- 发送缓冲区数目
+* 返回值：	TRUE	-- 成功
+*			FALSE	-- 失败，可通过 SYS_GetLastError() 获取 Windows 错误代码
+*/
+HPSOCKET_API BOOL __stdcall HP_Cast_SendPackets(HP_UdpCast pCast, const WSABUF pBuffers[], int iCount);
+
+
+/**********************************************************************************/
 /****************************** UDP Cast 属性访问方法 ******************************/
 
 /* 设置数据报文最大长度（建议在局域网环境下不超过 1472 字节，在广域网环境下不超过 548 字节） */
